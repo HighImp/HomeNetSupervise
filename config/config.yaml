@@ -1,5 +1,5 @@
 network:
   subnet: "192.168.178.0/24"  # Network to monitor
-  scan_interval: 300          # Scan interval in seconds (5 minutes)
-  port_scan_timeout: 1        # Timeout per port in seconds
-  max_concurrent_scans: 10    # Maximum number of concurrent scans 
+  scan_interval: 600          # Scan interval in seconds (10 minutes)
+  port_scan_timeout: 0.5      # Timeout per port in seconds (reduced from 1s)
+  max_concurrent_scans: 50    # Maximum number of concurrent scans (increased from 10)
