@@ -1,79 +1,101 @@
 # HomeNetSupervise
 
-Eine lokale Webanwendung zur Überwachung von Netzwerkdiensten und verbundenen Geräten im Heimnetzwerk.
+Ein leistungsstarkes Netzwerküberwachungstool für Heimnetzwerke, das Geräte, Dienste und offene Ports automatisch erkennt und überwacht.
 
 ## Features
 
-- Überwachung von Diensten via Ping und Portprüfung
-- Anzeige verbundener Netzwerkgeräte
-- Manuelle Überprüfung beliebiger Hosts und Ports
-- Einfache Weboberfläche
-- Automatische Aktualisierung alle 30 Sekunden
-- Docker-Container für einfache Installation
+- 🔍 Automatische Erkennung von Netzwerkgeräten
+- 🌐 Port-Scanning und Dienstüberwachung
+- 📊 Übersichtliche Darstellung aller Netzwerkgeräte und Dienste
+- 🔄 Echtzeit-Statusüberwachung
+- 📱 Responsive Web-Oberfläche
+- 🔐 MAC-Adress-Erkennung und Herstelleridentifikation
+- 💾 Konfigurationsimport/-export
 
-## Voraussetzungen
+## Systemanforderungen
 
-- Docker und Docker Compose
-- Linux-Host mit Netzwerkzugriff
-- Root-Rechte für Ping-Befehle
+- Python 3.8 oder höher
+- Linux-Betriebssystem (für ARP-Scanning)
+- Netzwerkzugriff auf das zu überwachende Subnetz
 
 ## Installation
 
 1. Repository klonen:
 ```bash
-git clone https://github.com/yourusername/homenetsupervise.git
-cd homenetsupervise
+git clone https://github.com/HighImp/HomeNetSupervise.git
+cd HomeNetSupervise
 ```
 
-2. Konfiguration anpassen:
-- Kopieren Sie die `config.yaml` und passen Sie die Dienste und Geräte an
-- Die Konfigurationsdatei muss im `config`-Verzeichnis liegen
-
-3. Container starten:
-```bash
-docker-compose up -d
-```
-
-Die Anwendung ist dann unter `http://localhost:8000` erreichbar.
-
-## Konfiguration
-
-Die `config.yaml` enthält zwei Hauptabschnitte:
-
-### Services
-```yaml
-services:
-  - name: Home Assistant
-    host: 192.168.178.100
-    port: 8123
-```
-
-### Devices
-```yaml
-devices:
-  - mac: "AA:BB:CC:DD:EE:FF"
-    alias: "Wohnzimmer TV"
-    ip: "192.168.178.50"
-```
-
-## Entwicklung
-
-1. Virtuelle Umgebung erstellen:
+2. Virtuelle Umgebung erstellen und aktivieren:
 ```bash
 python -m venv venv
-source venv/bin/activate
+source venv/bin/activate  # Linux/Mac
+# oder
+.\venv\Scripts\activate  # Windows
 ```
 
-2. Abhängigkeiten installieren:
+3. Abhängigkeiten installieren:
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Backend starten:
+4. Anwendung starten:
 ```bash
 python backend.py
 ```
 
+5. Webinterface aufrufen:
+```
+http://localhost:8000
+```
+
+## Konfiguration
+
+Die Anwendung kann über die `config.yaml` Datei konfiguriert werden:
+
+```yaml
+# Beispiel-Konfiguration
+network:
+  subnet: "192.168.178.0/24"  # Zu überwachendes Subnetz
+  scan_interval: 300          # Scan-Intervall in Sekunden (5 Minuten)
+  port_scan_timeout: 1        # Timeout pro Port in Sekunden
+  max_concurrent_scans: 10    # Maximale Anzahl gleichzeitiger Scans
+```
+
+## Verwendung
+
+### Autoscan
+1. Öffne das Webinterface
+2. Navigiere zum "Autoscan" Bereich
+3. Gib das zu scannende Subnetz ein (z.B. 192.168.178.0/24)
+4. Wähle die zu scannenden Ports
+5. Starte den Scan
+
+### Einzelgerät-Scan
+1. Wähle ein Gerät aus der Liste
+2. Klicke auf "Ports scannen"
+3. Warte auf die Ergebnisse
+
+### Konfiguration exportieren/importieren
+1. Nutze die Buttons "Konfiguration exportieren" oder "Konfiguration importieren"
+2. Die Konfiguration wird als JSON-Datei gespeichert/geladen
+
+## Sicherheitshinweise
+
+- Die Anwendung benötigt Root-Rechte für ARP-Scanning
+- Stelle sicher, dass nur autorisierte Benutzer Zugriff auf das Webinterface haben
+- Verwende HTTPS in Produktionsumgebungen
+
 ## Lizenz
 
-MIT 
+MIT License - siehe [LICENSE](LICENSE) Datei für Details.
+
+## Beitragen
+
+Beiträge sind willkommen! Bitte erstelle einen Pull Request oder öffne ein Issue für Verbesserungsvorschläge.
+
+## Support
+
+Bei Problemen oder Fragen:
+1. Überprüfe die [Issues](https://github.com/HighImp/HomeNetSupervise/issues)
+2. Erstelle ein neues Issue, falls dein Problem noch nicht dokumentiert ist 
