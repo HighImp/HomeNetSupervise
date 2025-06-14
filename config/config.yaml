@@ -1,5 +1,19 @@
-network:
-  subnet: "192.168.178.0/24"  # Network to monitor
-  scan_interval: 600          # Scan interval in seconds (10 minutes)
-  port_scan_timeout: 0.5      # Timeout per port in seconds (reduced from 1s)
-  max_concurrent_scans: 50    # Maximum number of concurrent scans (increased from 10)
+default_ports:
+- 80
+- 443
+- 22
+- 21
+- 25
+- 1433
+- 3306
+- 5432
+- 27017
+- 5000
+- 8080
+- 8443
+network_ranges:
+- 192.168.178.0/24
+scan_settings:
+  interval: 600
+  threads: 20
+  timeout: 0.5
