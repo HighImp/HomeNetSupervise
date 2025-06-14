@@ -1,101 +1,101 @@
 # HomeNetSupervise
 
-Ein leistungsstarkes Netzwerküberwachungstool für Heimnetzwerke, das Geräte, Dienste und offene Ports automatisch erkennt und überwacht.
+A powerful network monitoring tool for home networks that automatically detects and monitors devices, services, and open ports.
 
 ## Features
 
-- 🔍 Automatische Erkennung von Netzwerkgeräten
-- 🌐 Port-Scanning und Dienstüberwachung
-- 📊 Übersichtliche Darstellung aller Netzwerkgeräte und Dienste
-- 🔄 Echtzeit-Statusüberwachung
-- 📱 Responsive Web-Oberfläche
-- 🔐 MAC-Adress-Erkennung und Herstelleridentifikation
-- 💾 Konfigurationsimport/-export
+- 🔍 Automatic network device detection
+- 🌐 Port scanning and service monitoring
+- 📊 Clear overview of all network devices and services
+- 🔄 Real-time status monitoring
+- 📱 Responsive web interface
+- 🔐 MAC address detection and vendor identification
+- 💾 Configuration import/export
 
-## Systemanforderungen
+## System Requirements
 
-- Python 3.8 oder höher
-- Linux-Betriebssystem (für ARP-Scanning)
-- Netzwerkzugriff auf das zu überwachende Subnetz
+- Python 3.8 or higher
+- Linux operating system (for ARP scanning)
+- Network access to the subnet to be monitored
 
 ## Installation
 
-1. Repository klonen:
+1. Clone the repository:
 ```bash
 git clone https://github.com/HighImp/HomeNetSupervise.git
 cd HomeNetSupervise
 ```
 
-2. Virtuelle Umgebung erstellen und aktivieren:
+2. Create and activate virtual environment:
 ```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
-# oder
+# or
 .\venv\Scripts\activate  # Windows
 ```
 
-3. Abhängigkeiten installieren:
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Anwendung starten:
+4. Start the application:
 ```bash
 python backend.py
 ```
 
-5. Webinterface aufrufen:
+5. Access the web interface:
 ```
 http://localhost:8000
 ```
 
-## Konfiguration
+## Configuration
 
-Die Anwendung kann über die `config.yaml` Datei konfiguriert werden:
+The application can be configured via the `config.yaml` file:
 
 ```yaml
-# Beispiel-Konfiguration
+# Example configuration
 network:
-  subnet: "192.168.178.0/24"  # Zu überwachendes Subnetz
-  scan_interval: 300          # Scan-Intervall in Sekunden (5 Minuten)
-  port_scan_timeout: 1        # Timeout pro Port in Sekunden
-  max_concurrent_scans: 10    # Maximale Anzahl gleichzeitiger Scans
+  subnet: "192.168.178.0/24"  # Network to monitor
+  scan_interval: 300          # Scan interval in seconds (5 minutes)
+  port_scan_timeout: 1        # Timeout per port in seconds
+  max_concurrent_scans: 10    # Maximum number of concurrent scans
 ```
 
-## Verwendung
+## Usage
 
 ### Autoscan
-1. Öffne das Webinterface
-2. Navigiere zum "Autoscan" Bereich
-3. Gib das zu scannende Subnetz ein (z.B. 192.168.178.0/24)
-4. Wähle die zu scannenden Ports
-5. Starte den Scan
+1. Open the web interface
+2. Navigate to the "Autoscan" section
+3. Enter the subnet to scan (e.g., 192.168.178.0/24)
+4. Select the ports to scan
+5. Start the scan
 
-### Einzelgerät-Scan
-1. Wähle ein Gerät aus der Liste
-2. Klicke auf "Ports scannen"
-3. Warte auf die Ergebnisse
+### Single Device Scan
+1. Select a device from the list
+2. Click "Scan Ports"
+3. Wait for the results
 
-### Konfiguration exportieren/importieren
-1. Nutze die Buttons "Konfiguration exportieren" oder "Konfiguration importieren"
-2. Die Konfiguration wird als JSON-Datei gespeichert/geladen
+### Export/Import Configuration
+1. Use the "Export Configuration" or "Import Configuration" buttons
+2. Configuration will be saved/loaded as a JSON file
 
-## Sicherheitshinweise
+## Security Notes
 
-- Die Anwendung benötigt Root-Rechte für ARP-Scanning
-- Stelle sicher, dass nur autorisierte Benutzer Zugriff auf das Webinterface haben
-- Verwende HTTPS in Produktionsumgebungen
+- The application requires root privileges for ARP scanning
+- Ensure only authorized users have access to the web interface
+- Use HTTPS in production environments
 
-## Lizenz
+## License
 
-MIT License - siehe [LICENSE](LICENSE) Datei für Details.
+MIT License - see [LICENSE](LICENSE) file for details.
 
-## Beitragen
+## Contributing
 
-Beiträge sind willkommen! Bitte erstelle einen Pull Request oder öffne ein Issue für Verbesserungsvorschläge.
+Contributions are welcome! Please create a Pull Request or open an Issue for suggestions.
 
 ## Support
 
-Bei Problemen oder Fragen:
-1. Überprüfe die [Issues](https://github.com/HighImp/HomeNetSupervise/issues)
-2. Erstelle ein neues Issue, falls dein Problem noch nicht dokumentiert ist 
+For problems or questions:
+1. Check the [Issues](https://github.com/HighImp/HomeNetSupervise/issues)
+2. Create a new Issue if your problem is not documented 
