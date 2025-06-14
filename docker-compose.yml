@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  homenetsupervise:
+    build: .
+    container_name: homenetsupervise
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config:/app/config
+    restart: always
+    environment:
+      - CONFIG_PATH=/app/config/config.yaml
+    network_mode: host
+    cap_add:
+      - NET_RAW
+    security_opt:
+      - apparmor:unconfined
+    healthcheck:
+      interval: 30s
+      timeout: 3s
+      test: ["CMD", "curl", "-f", "http://localhost:8000/status"]
+
+networks:
+  homenet:
+    driver: bridge 

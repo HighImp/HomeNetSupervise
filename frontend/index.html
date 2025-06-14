@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeNetSupervise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        .status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .online {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .offline {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .inspect-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .autoscan-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .autoscan-result {
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #007bff;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            text-align: center;
+            margin: 5px 0;
+        }
+        .port-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .port-tag {
+            background-color: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .port-tag button {
+            padding: 2px 6px;
+            font-size: 12px;
+            background-color: #dc3545;
+        }
+        .port-tag button:hover {
+            background-color: #c82333;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-start;
+        }
+        .edit-button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .browser-button {
+            background-color: #17a2b8;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .rescan-button {
+            background-color: #6f42c1;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .edit-button:hover {
+            background-color: #218838;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+        .browser-button:hover {
+            background-color: #138496;
+        }
+        .rescan-button:hover {
+            background-color: #5a32a3;
+        }
+        .edit-form {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .edit-form.active {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .header-actions button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .header-actions button:hover {
+            background-color: #0056b3;
+        }
+        .autoscan-form button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .autoscan-form button:hover {
+            background-color: #218838;
+        }
+        .autoscan-form input[type="text"]#ports-input {
+            min-width: 350px;
+            width: 40%;
+        }
+        .ping-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .ping-status.online {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .ping-status.offline {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            max-width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .popup-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .popup-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+        .port-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .port-item {
+            padding: 8px;
+            border-radius: 4px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .port-item.open {
+            background: #d4edda;
+            color: #155724;
+        }
+        .port-item.closed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .scan-progress {
+            margin: 20px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .scan-progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .scan-progress-fill {
+            height: 100%;
+            background-color: #007bff;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .scan-progress-text {
+            text-align: center;
+            color: #666;
+        }
+        .status-existing {
+            color: #6c757d;
+            font-weight: bold;
+        }
+        .status-new {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>HomeNetSupervise</h1>
+    <div id="stats" style="margin-bottom: 20px; color: #666;">
+        <span id="device-count">Geräte: 0</span> | 
+        <span id="service-count">Dienste: 0</span> | 
+        <span id="unknown-devices">Unbekannte Geräte: 0</span> | 
+        <span id="unknown-services">Unbekannte Dienste: 0</span>
+    </div>
+    
+    <div class="container">
+        <h2 style="display: flex; align-items: center; justify-content: space-between;">
+            Dienste
+            <button id="toggle-services" onclick="toggleSection('services')">Einklappen</button>
+        </h2>
+        <div id="services-section">
+            <table id="services-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Host</th>
+                        <th>Port</th>
+                        <th>Status</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 style="display: flex; align-items: center; justify-content: space-between;">
+            Geräte
+            <button id="toggle-devices" onclick="toggleSection('devices')">Einklappen</button>
+        </h2>
+        <div id="devices-section">
+            <table id="devices-table">
+                <thead>
+                    <tr>
+                        <th>Alias</th>
+                        <th>IP</th>
+                        <th>MAC</th>
+                        <th>Offene Ports</th>
+                        <th>Ping Status</th>
+                        <th>Aktionen</th>
+                    </tr>
+                </thead>
+                <tbody id="devicesTableBody">
+                    <!-- Geräte werden hier dynamisch eingefügt -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Autoscan</h2>
+        <div class="autoscan-form">
+            <input type="text" id="subnet-input" placeholder="Subnetz (z.B. 192.168.178.0/24)" value="192.168.178.0/24">
+            <input type="text" id="ports-input" placeholder="Ports (kommagetrennt)" value="80,443,22,21,25,1433,3306,5432,27017">
+            <button onclick="startAutoscan()">Autoscan starten</button>
+        </div>
+        <div id="autoscan-progress" style="display: none;">
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+            <div class="progress-text" id="progress-text">Scanning: 0%</div>
+        </div>
+        <div id="autoscan-result" class="autoscan-result"></div>
+    </div>
+
+    <div class="container config-actions">
+        <h2>Konfiguration</h2>
+        <div class="header-actions">
+            <button onclick="exportConfig()">Konfiguration exportieren</button>
+            <input type="file" id="import-file" style="display: none;" onchange="importConfig(event)">
+            <button onclick="document.getElementById('import-file').click()">Konfiguration importieren</button>
+        </div>
+    </div>
+
+    <div id="port-scan-popup" class="popup">
+        <div class="popup-header">
+            <h3>Gefundene Ports</h3>
+            <button class="popup-close" onclick="closePortScanPopup()">&times;</button>
+        </div>
+        <div id="port-scan-results"></div>
+    </div>
+    <div id="popup-backdrop" class="popup-backdrop" onclick="closePortScanPopup()"></div>
+
+    <script>
+        // Globale Variable für die Ports
+        let scanPorts = [80, 443, 22, 21, 25, 1433, 3306, 5432, 27017];
+        let collectedPorts = new Set(scanPorts); // Neue globale Variable für gesammelte Ports
+        let services = []; // Globale Variable für Services
+        let devices = []; // Globale Variable für Devices
+
+        // Initialisiere die Seite
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Lade initial die Daten
+            const data = await loadData();
+            services = data.services;
+            devices = data.devices;
+            
+            // Setze regelmäßiges Update
+            setInterval(async () => {
+                const data = await loadData();
+                services = data.services;
+                devices = data.devices;
+            }, 30000); // Alle 30 Sekunden aktualisieren
+        });
+
+        // Funktion zum Aktualisieren der Port-Liste
+        function updatePortList() {
+            const portList = document.getElementById('port-list');
+            portList.innerHTML = scanPorts.map(port => `
+                <div class="port-tag">
+                    ${port}
+                    <button onclick="removePort(${port})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Funktion zum Hinzufügen eines Ports
+        function addPort() {
+            const input = document.getElementById('new-port-input');
+            const port = parseInt(input.value);
+            if (port && port >= 1 && port <= 65535 && !scanPorts.includes(port)) {
+                scanPorts.push(port);
+                updatePortList();
+                input.value = '';
+            } else {
+                alert('Bitte geben Sie einen gültigen Port zwischen 1 und 65535 ein');
+            }
+        }
+
+        // Funktion zum Entfernen eines Ports
+        function removePort(port) {
+            scanPorts = scanPorts.filter(p => p !== port);
+            updatePortList();
+        }
+
+        // Initialisiere die Port-Liste
+        updatePortList();
+
+        async function loadData() {
+            try {
+                const [services, devices] = await Promise.all([
+                    fetch('/status').then(r => r.json()),
+                    fetch('/devices').then(r => r.json())
+                ]);
+
+                updateServicesTable(services);
+                updateDevicesTable(devices);
+                
+                const unknownDevices = devices.filter(d => 
+                    !d.alias || 
+                    d.alias.toLowerCase().includes('unknown') || 
+                    d.alias.toLowerCase().includes('unbekannt')
+                ).length;
+                
+                const unknownServices = services.filter(s => 
+                    !s.name || 
+                    s.name.toLowerCase().includes('unknown') || 
+                    s.name.toLowerCase().includes('unbekannt')
+                ).length;
+
+                document.getElementById('device-count').textContent = `Geräte: ${devices.length}`;
+                document.getElementById('service-count').textContent = `Dienste: ${services.length}`;
+                document.getElementById('unknown-devices').textContent = `Unbekannte Geräte: ${unknownDevices}`;
+                document.getElementById('unknown-services').textContent = `Unbekannte Dienste: ${unknownServices}`;
+
+                localStorage.setItem('services', JSON.stringify(services));
+                localStorage.setItem('devices', JSON.stringify(devices));
+
+                return { services, devices };
+            } catch (error) {
+                console.error('Error loading data:', error);
+                const services = JSON.parse(localStorage.getItem('services') || '[]');
+                const devices = JSON.parse(localStorage.getItem('devices') || '[]');
+                return { services, devices };
+            }
+        }
+
+        function updateServicesTable(services) {
+            const tbody = document.querySelector('#services-table tbody');
+            if (!services?.length) {
+                tbody.innerHTML = '<tr><td colspan="5">Keine Dienste gefunden</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = services.map((service, index) => `
+                <tr>
+                    <td>${service.name}</td>
+                    <td>${service.host}</td>
+                    <td>${service.port}</td>
+                    <td><span class="status ${service.port_open ? 'online' : 'offline'}">${service.port_open ? 'Offen' : 'Geschlossen'}</span></td>
+                    <td class="action-buttons">
+                        <button class="browser-button" onclick="openInBrowser('${service.host}', ${service.port})">Browser</button>
+                        <button class="edit-button" onclick="editService(${index})">Bearbeiten</button>
+                        <button class="delete-button" onclick="deleteService(${index})">Löschen</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <div id="edit-service-${index}" class="edit-form">
+                            <input type="text" id="edit-service-name-${index}" value="${service.name}" placeholder="Name">
+                            <input type="text" id="edit-service-host-${index}" value="${service.host}" placeholder="Host">
+                            <input type="number" id="edit-service-port-${index}" value="${service.port}" placeholder="Port">
+                            <button onclick="saveService(${index})">Speichern</button>
+                            <button onclick="cancelEdit('service', ${index})">Abbrechen</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function checkAllDevices() {
+            const pingElements = document.querySelectorAll('.ping-status');
+            for (const el of pingElements) {
+                const ip = el.dataset.ip;
+                try {
+                    const response = await fetch('/inspect', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ host: ip, ports: [1] }) // Port 1 als Dummy
+                    });
+                    const result = await response.json();
+                    el.textContent = result.ping ? 'Online' : 'Offline';
+                    el.className = 'ping-status ' + (result.ping ? 'online' : 'offline');
+                } catch (e) {
+                    el.textContent = '?';
+                    el.className = 'ping-status';
+                }
+            }
+        }
+
+        function updateDevicesTable(devices) {
+            const tbody = document.getElementById('devicesTableBody');
+            if (!devices?.length) {
+                tbody.innerHTML = '<tr><td colspan="6">Keine Geräte gefunden</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = devices.map((device, index) => `
+                <tr data-ip="${device.ip}">
+                    <td>${device.alias || 'Unknown Device'}</td>
+                    <td>${device.ip}</td>
+                    <td>${device.mac || ''} ${device.vendor ? `(${device.vendor})` : ''}</td>
+                    <td>${device.open_ports || 0}</td>
+                    <td class="ping-status" data-ip="${device.ip}">Warte...</td>
+                    <td>
+                        <button class="rescan-button" onclick="rescanDevice('${device.ip}')">Ports scannen</button>
+                        <button class="edit-button" onclick="editDevice(${index})">Bearbeiten</button>
+                        <button class="delete-button" onclick="deleteDevice(${index})">Löschen</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <div id="edit-device-${index}" class="edit-form">
+                            <input type="text" id="edit-device-alias-${index}" value="${device.alias || ''}" placeholder="Gerätename">
+                            <input type="text" id="edit-device-ip-${index}" value="${device.ip}" placeholder="IP-Adresse">
+                            <button onclick="saveDevice(${index})">Speichern</button>
+                            <button onclick="cancelEdit('device', ${index})">Abbrechen</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            checkAllDevices();
+        }
+
+        async function rescanDevice(ip) {
+            try {
+                // Zeige Popup
+                const popup = document.getElementById('port-scan-popup');
+                const backdrop = document.getElementById('popup-backdrop');
+                const resultsDiv = document.getElementById('port-scan-results');
+                popup.style.display = 'block';
+                backdrop.style.display = 'block';
+                
+                // Zeige Fortschritt
+                resultsDiv.innerHTML = `
+                    <div class="scan-progress">
+                        <h4>Scanne Ports...</h4>
+                        <div class="scan-progress-bar">
+                            <div class="scan-progress-fill" id="scan-progress-fill"></div>
+                        </div>
+                        <div class="scan-progress-text" id="scan-progress-text">0%</div>
+                    </div>
+                `;
+                
+                // Hole aktuelle Dienste und aktualisiere MAC-Adresse
+                const [currentServices, arpTable] = await Promise.all([
+                    fetch('/status').then(r => r.json()),
+                    fetch('/arp-scan').then(r => r.json())
+                ]);
+                
+                const existingServices = new Set(
+                    currentServices
+                        .filter(s => s.host === ip)
+                        .map(s => s.port)
+                );
+                
+                // Scanne Ports
+                const ports = Array.from({length: 10000}, (_, i) => i + 1);
+                const result = await fetch('/inspect', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ host: ip, ports })
+                }).then(r => r.json());
+                
+                // Verarbeite offene Ports
+                const openPorts = Object.entries(result.ports)
+                    .filter(([_, isOpen]) => isOpen)
+                    .map(([port, _]) => parseInt(port))
+                    .sort((a, b) => a - b);
+                
+                // Füge neue Dienste hinzu
+                for (const port of openPorts) {
+                    if (!existingServices.has(port)) {
+                        await fetch('/service', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                name: `Port ${port}`,
+                                host: ip,
+                                port: port
+                            })
+                        });
+                    }
+                }
+                
+                // Zeige Ergebnisse inkl. Übernahme-Button
+                resultsDiv.innerHTML = `
+                    <p>Gefundene offene Ports: ${openPorts.length}</p>
+                    <div class="port-list">
+                        ${openPorts.map(port => `
+                            <div class="port-item open">
+                                <span>Port ${port}</span>
+                                <span class="status-${existingServices.has(port) ? 'existing' : 'new'}">
+                                    ${existingServices.has(port) ? '✓ Bereits bekannt' : '✓ Als Dienst hinzugefügt'}
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="setPortsInput([${openPorts.join(',')}])">Als neue Ports für Autoscan übernehmen</button>
+                `;
+                
+                // Aktualisiere Daten
+                await loadData();
+                
+            } catch (error) {
+                console.error('Error scanning device:', error);
+                alert('Fehler beim Scannen des Geräts');
+                closePortScanPopup();
+            }
+        }
+
+        function setPortsInput(ports) {
+            // Füge neue Ports zum Set hinzu
+            ports.forEach(port => collectedPorts.add(port));
+            
+            // Konvertiere Set zu sortiertem Array und aktualisiere das Eingabefeld
+            const sortedPorts = Array.from(collectedPorts).sort((a, b) => a - b);
+            document.getElementById('ports-input').value = sortedPorts.join(',');
+            
+            // Zeige Feedback
+            const newPorts = ports.filter(port => !scanPorts.includes(port));
+            if (newPorts.length > 0) {
+                alert(`${newPorts.length} neue Ports wurden zur Liste hinzugefügt.`);
+            }
+        }
+
+        function closePortScanPopup() {
+            const popup = document.getElementById('port-scan-popup');
+            const backdrop = document.getElementById('popup-backdrop');
+            popup.style.display = 'none';
+            backdrop.style.display = 'none';
+        }
+
+        async function addService(host, port) {
+            try {
+                const response = await fetch('/service', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: `Port ${port}`,
+                        host: host,
+                        port: port
+                    }),
+                });
+                
+                if (response.ok) {
+                    loadData();
+                    alert('Dienst erfolgreich hinzugefügt');
+                } else {
+                    alert('Fehler beim Hinzufügen des Dienstes');
+                }
+            } catch (error) {
+                console.error('Error adding service:', error);
+                alert('Fehler beim Hinzufügen des Dienstes');
+            }
+        }
+
+        // Helper function to parse port ranges
+        function parsePortRanges(portString) {
+            const ports = new Set();
+            const ranges = portString.split(',').map(r => r.trim());
+            
+            for (const range of ranges) {
+                if (range.includes('-')) {
+                    const [start, end] = range.split('-').map(n => parseInt(n.trim()));
+                    if (!isNaN(start) && !isNaN(end) && start > 0 && end <= 65535 && start <= end) {
+                        for (let i = start; i <= end; i++) {
+                            ports.add(i);
+                        }
+                    }
+                } else {
+                    const port = parseInt(range);
+                    if (!isNaN(port) && port > 0 && port <= 65535) {
+                        ports.add(port);
+                    }
+                }
+            }
+            return Array.from(ports);
+        }
+
+        async function startAutoscan() {
+            const subnet = document.getElementById('subnet-input').value;
+            const portsInput = document.getElementById('ports-input').value;
+            const ports = parsePortRanges(portsInput);
+
+            if (!subnet) {
+                alert('Bitte Subnetz eingeben');
+                return;
+            }
+
+            if (ports.length === 0) {
+                alert('Bitte mindestens einen Port oder einen Port-Bereich eingeben (z.B. 80,443,1000-2000)');
+                return;
+            }
+
+            // Zeige Fortschrittsbalken
+            const progressDiv = document.getElementById('autoscan-progress');
+            const progressBar = document.getElementById('progress-bar-fill');
+            const progressText = document.getElementById('progress-text');
+            progressDiv.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Scanning: 0%';
+
+            try {
+                const response = await fetch('/autoscan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        subnet,
+                        ports
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Autoscan fehlgeschlagen');
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let foundServices = [];
+                let foundDevices = [];
+                let foundPorts = [];
+
+                while (true) {
+                    const {value, done} = await reader.read();
+                    if (done) break;
+
+                    const lines = decoder.decode(value).split('\n');
+                    for (const line of lines) {
+                        if (!line) continue;
+                        const data = JSON.parse(line);
+                        
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+
+                        // Update progress
+                        progressBar.style.width = `${data.progress}%`;
+                        progressText.textContent = data.message;
+
+                        // Collect found services, devices, ports
+                        if (data.services) {
+                            foundServices = data.services;
+                        }
+                        if (data.devices) {
+                            foundDevices = data.devices;
+                        }
+                        if (data.found_ports) {
+                            foundPorts = data.found_ports;
+                        }
+                    }
+                }
+
+                // Show results only if there are any
+                const resultDiv = document.getElementById('autoscan-result');
+                let html = '';
+                if (foundDevices && foundDevices.length > 0) {
+                    const newDevices = foundDevices.filter(device => 
+                        !devices.some(d => d.ip === device.ip)
+                    );
+                    html += `<h3>Gefundene Geräte: ${foundDevices.length} (${newDevices.length} neu)</h3><ul>${foundDevices.map(device => `
+                        <li>${device.alias} (${device.ip})${device.mac && device.mac !== 'Unbekannt' ? ' - MAC: ' + device.mac : ''}</li>
+                    `).join('')}</ul>`;
+                }
+                if (foundServices && foundServices.length > 0) {
+                    const newServices = foundServices.filter(service => 
+                        !services.some(s => s.host === service.host && s.port === service.port)
+                    );
+                    html += `<h3>Gefundene Dienste: ${foundServices.length} (${newServices.length} neu)</h3><ul>${foundServices.map(service => `
+                        <li>${service.name} (${service.host}:${service.port})</li>
+                    `).join('')}</ul>`;
+                }
+                if (foundPorts && foundPorts.length > 0) {
+                    html += `<div style='margin-top:10px;'><b>Offene Ports für zukünftige Scans:</b><br>
+                        <span>${foundPorts.join(', ')}</span>
+                        <br><button onclick='setPortsInput([${foundPorts.join(',')}])'>Als neue Ports für Autoscan übernehmen</button>
+                    </div>`;
+                }
+                resultDiv.innerHTML = html;
+                // Reload data to update services and devices tables
+                loadData();
+            } catch (error) {
+                console.error('Error during autoscan:', error);
+                alert('Fehler beim Autoscan: ' + error.message);
+            } finally {
+                // Verstecke Fortschrittsbalken nach 2 Sekunden
+                setTimeout(() => {
+                    progressDiv.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        function toggleSection(section) {
+            const sectionDiv = document.getElementById(section + '-section');
+            const btn = document.getElementById('toggle-' + section);
+            if (sectionDiv.style.display === 'none') {
+                sectionDiv.style.display = '';
+                btn.textContent = 'Einklappen';
+            } else {
+                sectionDiv.style.display = 'none';
+                btn.textContent = 'Ausklappen';
+            }
+        }
+
+        async function exportConfig() {
+            try {
+                const response = await fetch('/export');
+                const data = await response.json();
+                
+                // Create and download file
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'homenet-config.json';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (error) {
+                console.error('Error exporting config:', error);
+                alert('Fehler beim Exportieren der Konfiguration');
+            }
+        }
+
+        async function importConfig(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            try {
+                // Lese die Konfigurationsdatei
+                const data = JSON.parse(await file.text());
+                
+                // Importiere die Konfiguration
+                const response = await fetch('/import', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Import fehlgeschlagen');
+                }
+
+                // Warte kurz, damit der Server die Daten verarbeiten kann
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Führe ARP-Scan durch
+                const arpResponse = await fetch('/arp-scan', { method: 'POST' });
+                if (!arpResponse.ok) {
+                    throw new Error('ARP-Scan fehlgeschlagen');
+                }
+
+                // Warte kurz, damit der ARP-Scan abgeschlossen ist
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Lade die aktualisierten Daten
+                const [servicesResponse, devicesResponse] = await Promise.all([
+                    fetch('/status'),
+                    fetch('/devices')
+                ]);
+
+                if (!servicesResponse.ok || !devicesResponse.ok) {
+                    throw new Error('Fehler beim Laden der aktualisierten Daten');
+                }
+
+                const services = await servicesResponse.json();
+                const devices = await devicesResponse.json();
+
+                // Aktualisiere die globalen Variablen
+                window.services = services;
+                window.devices = devices;
+
+                // Aktualisiere die Tabellen
+                updateServicesTable(services);
+                updateDevicesTable(devices);
+
+                // Aktualisiere die Statistiken
+                const unknownDevices = devices.filter(d => 
+                    !d.alias || 
+                    d.alias.toLowerCase().includes('unknown') || 
+                    d.alias.toLowerCase().includes('unbekannt')
+                ).length;
+                
+                const unknownServices = services.filter(s => 
+                    !s.name || 
+                    s.name.toLowerCase().includes('unknown') || 
+                    s.name.toLowerCase().includes('unbekannt')
+                ).length;
+
+                document.getElementById('device-count').textContent = `Geräte: ${devices.length}`;
+                document.getElementById('service-count').textContent = `Dienste: ${services.length}`;
+                document.getElementById('unknown-devices').textContent = `Unbekannte Geräte: ${unknownDevices}`;
+                document.getElementById('unknown-services').textContent = `Unbekannte Dienste: ${unknownServices}`;
+
+                // Speichere die Daten im localStorage
+                localStorage.setItem('services', JSON.stringify(services));
+                localStorage.setItem('devices', JSON.stringify(devices));
+
+                alert('Konfiguration erfolgreich importiert');
+            } catch (error) {
+                console.error('Error importing config:', error);
+                alert('Fehler beim Importieren der Konfiguration: ' + error.message);
+            } finally {
+                // Reset file input
+                event.target.value = '';
+            }
+        }
+
+        async function editService(index) {
+            document.getElementById(`edit-service-${index}`).classList.add('active');
+        }
+
+        async function saveService(index) {
+            const name = document.getElementById(`edit-service-name-${index}`).value;
+            const host = document.getElementById(`edit-service-host-${index}`).value;
+            const port = parseInt(document.getElementById(`edit-service-port-${index}`).value);
+
+            try {
+                const response = await fetch(`/service/${index}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, host, port }),
+                });
+                if (response.ok) {
+                    cancelEdit('service', index);
+                    loadData();
+                } else {
+                    alert('Fehler beim Speichern des Dienstes');
+                }
+            } catch (error) {
+                console.error('Error saving service:', error);
+                alert('Fehler beim Speichern des Dienstes');
+            }
+        }
+
+        async function deleteService(index) {
+            if (!confirm('Möchten Sie diesen Dienst wirklich löschen?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/service/${index}`, {
+                    method: 'DELETE',
+                });
+                if (response.ok) {
+                    loadData();
+                } else {
+                    alert('Fehler beim Löschen des Dienstes');
+                }
+            } catch (error) {
+                console.error('Error deleting service:', error);
+                alert('Fehler beim Löschen des Dienstes');
+            }
+        }
+
+        async function editDevice(index) {
+            document.getElementById(`edit-device-${index}`).classList.add('active');
+        }
+
+        async function saveDevice(index) {
+            const alias = document.getElementById(`edit-device-alias-${index}`).value;
+            const ip = document.getElementById(`edit-device-ip-${index}`).value;
+
+            try {
+                const response = await fetch(`/device/${index}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ alias, ip }),
+                });
+                if (response.ok) {
+                    cancelEdit('device', index);
+                    loadData();
+                } else {
+                    alert('Fehler beim Speichern des Geräts');
+                }
+            } catch (error) {
+                console.error('Error saving device:', error);
+                alert('Fehler beim Speichern des Geräts');
+            }
+        }
+
+        async function deleteDevice(index) {
+            if (!confirm('Möchten Sie dieses Gerät wirklich löschen?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/device/${index}`, {
+                    method: 'DELETE',
+                });
+                if (response.ok) {
+                    loadData();
+                } else {
+                    alert('Fehler beim Löschen des Geräts');
+                }
+            } catch (error) {
+                console.error('Error deleting device:', error);
+                alert('Fehler beim Löschen des Geräts');
+            }
+        }
+
+        function cancelEdit(type, index) {
+            document.getElementById(`edit-${type}-${index}`).classList.remove('active');
+        }
+
+        function openInBrowser(host, port) {
+            const protocol = port === 443 ? 'https' : 'http';
+            window.open(`${protocol}://${host}:${port}`, '_blank');
+        }
+    </script>
+</body>
+</html> 
