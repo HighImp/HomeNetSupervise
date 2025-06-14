@@ -39,9 +39,13 @@ docker-compose.override.yml
 *.log
 logs/
 
-# Local configuration
-config.local.yaml
-*.local.yaml
+# Configuration
+config/
+*.yaml
+*.yml
+*.json
+!config/config.yaml  # Keep example config
+!oui.json  # Keep the OUI database
 
 # System Files
 .DS_Store
