@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "homenetsupervise"
 version = "0.1.0"
-description = "A powerful network monitoring tool for home networks"
+description = "A monitoring tool for home networks"
 readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
@@ -45,6 +45,9 @@ dev = [
 Homepage = "https://github.com/HighImp/HomeNetSupervise"
 Repository = "https://github.com/HighImp/HomeNetSupervise.git"
 Issues = "https://github.com/HighImp/HomeNetSupervise/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
 
 [tool.black]
 line-length = 88
